@@ -113,11 +113,11 @@
     <!-- Axios for making HTTP requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <div class="mt-4" style="display: none">
+    <div class="mt-4" id ="results" style="display: none">
       <h3>Translation Results</h3>
       <pre id="translationResults"></pre>
     </div>
-
+2233
     <!-- <div class="mt-4">
       <h4 id="progress-text">translating</h4>
       <div>
@@ -133,9 +133,9 @@
     <script>
       async function submitTranslation() {
         // Extract the text and languages from the form
-        const text_for_translation =
+        const text =
           document.getElementById("TextToTranslate").value;
-        const languages_chosen = document
+        const languages = document
           .getElementById("languages")
           .value.split(",")
           .map((Lang) => Lang.trim());
@@ -143,41 +143,57 @@
           alert("provide text and language");
           return;
         }
-        const progressBar = document.getElementbyID("progress=bar");
-      }
+        // const progressBar = document.getElementbyID("progress-bar");
+      
       //   // Prepare the payload
       //   var payload = {
-      //     text: text_for_translation,
-      //     languages: languages_chosen,
+      //     
       //   };
 
-      //   try {
-      //     // Execute the POST request to the translation endpoint
-      //     const response = await fetch("http://localhost:8000/translate", {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify(payload),
-      //     });
+        try {
+          // Execute the POST request to the translation endpoint
+          const response = await axios.post("http://localhost:8000/translate", {
+            text: text,
+            languages: languages});
+            const taskID = response.data.task_id;
+            alert(`Task ID: ${taskID}`)
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('status-container').style.display = 'none';
+            document.getElementById('content-container').style.display = 'none';
 
-      //     // Check if the response is OK
-      //     if (!response.ok) {
-      //       throw new Error(`HTTP error! Status: ${response.status}`);
-      //     }
+            let translationResult = null;
+            let progress = 0;
+            while(progress<100){
+              await  new Promise(resolve=> setTimeout(resolve,1000));
+              const resultResponse = await axios.get(`localhost:8000/translate)${taskID}`);
+              translationResult = resultResponse.data;
+              if(translationResult==='completed'){
+                progress=100;
+              
+              }else{
+                progress.style.width = `50%`;
+              }
+            }
+            document.getElementById('translationResults').textContent = JSON.stringify(translationResult.translations,)
+            document.getElementById('results').style.display = 'block';
+        }catch(error){
+          console.error("error submitting translation", error);
+          alert("error while translating")
+        }
+      }
+  
 
-      //     // Parse and handle the response
-      //     const result = await response.json();
-      //     alert("Translation request submitted. ID: " + result.id);
-      //     window.location.href = "/translate/" + result.id;
-      //   } catch (error) {
-      //     console.error("Error:", error);
-      //     alert("Failed to submit translation request.");
-      //   }
-      // }
+      async function checkTranslationStatus() {
+        return;
+      }
+      async function checkTranslationStatus() {
+        return;
+      }
+  
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
 
-<!-- till 16:00 completed -->
+
+ <!-- command to run the app ->
