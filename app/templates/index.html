@@ -113,11 +113,11 @@
     <!-- Axios for making HTTP requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <div class="mt-4" id ="results" style="display: none">
+    <div class="mt-4" id="results" style="display: none">
       <h3>Translation Results</h3>
       <pre id="translationResults"></pre>
     </div>
-2233
+    2233
     <!-- <div class="mt-4">
       <h4 id="progress-text">translating</h4>
       <div>
@@ -133,8 +133,7 @@
     <script>
       async function submitTranslation() {
         // Extract the text and languages from the form
-        const text =
-          document.getElementById("TextToTranslate").value;
+        const text = document.getElementById("TextToTranslate").value;
         const languages = document
           .getElementById("languages")
           .value.split(",")
@@ -144,44 +143,46 @@
           return;
         }
         // const progressBar = document.getElementbyID("progress-bar");
-      
-      //   // Prepare the payload
-      //   var payload = {
-      //     
-      //   };
+
+        //   // Prepare the payload
+        //   var payload = {
+        //
+        //   };
 
         try {
           // Execute the POST request to the translation endpoint
           const response = await axios.post("http://localhost:8000/translate", {
             text: text,
-            languages: languages});
-            const taskID = response.data.task_id;
-            alert(`Task ID: ${taskID}`)
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('status-container').style.display = 'none';
-            document.getElementById('content-container').style.display = 'none';
+            languages: languages,
+          });
+          const taskID = response.data.task_id;
+          alert(`Task ID: ${taskID}`);
+          document.getElementById("results").style.display = "none";
+          document.getElementById("status-container").style.display = "none";
+          document.getElementById("content-container").style.display = "none";
 
-            let translationResult = null;
-            let progress = 0;
-            while(progress<100){
-              await  new Promise(resolve=> setTimeout(resolve,1000));
-              const resultResponse = await axios.get(`localhost:8000/translate)${taskID}`);
-              translationResult = resultResponse.data;
-              if(translationResult==='completed'){
-                progress=100;
-              
-              }else{
-                progress.style.width = `50%`;
-              }
+          let translationResult = null;
+          let progress = 0;
+          while (progress < 100) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            const resultResponse = await axios.get(
+              `localhost:8000/translate)${taskID}`
+            );
+            translationResult = resultResponse.data;
+            if (translationResult === "completed") {
+              progress = 100;
+            } else {
+              progress.style.width = `50%`;
             }
-            document.getElementById('translationResults').textContent = JSON.stringify(translationResult.translations,)
-            document.getElementById('results').style.display = 'block';
-        }catch(error){
+          }
+          document.getElementById("translationResults").textContent =
+            JSON.stringify(translationResult.translations);
+          document.getElementById("results").style.display = "block";
+        } catch (error) {
           console.error("error submitting translation", error);
-          alert("error while translating")
+          alert("error while translating");
         }
       }
-  
 
       async function checkTranslationStatus() {
         return;
@@ -189,11 +190,7 @@
       async function checkTranslationStatus() {
         return;
       }
-  
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-
-
- <!-- command to run the app ->

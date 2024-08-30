@@ -22,4 +22,7 @@ app.add_middleware(
 
 @app.post("/translate",response_model=schemas.TaskResponse)
 def translate(request: schemas.TranslationRequest):
-    # 33:24
+    task = crud.create_translation_task(x,y, ,p)
+    background_tasks.add_task(perform_translation, task_id, request.text, request.languages, db)
+    return {"task_id": {task.id}}
+    # 40:00
